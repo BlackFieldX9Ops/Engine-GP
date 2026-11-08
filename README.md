@@ -1,46 +1,50 @@
 # ENGINE-GP
 
-**Visão:** motor gráfico próprio, independente e original.
+**Motor gráfico próprio, independente e original.**
 
-## Fases de Desenvolvimento
+ENGINE-GP é um motor gráfico 2D modular com editor visual integrado, construído com tecnologias web modernas e preparado para expansão futura para desktop e 3D.
 
-- **Fase 1:** HTML5 — motor 2D.
-- **Fase 2:** Android e computador.
-- **Fase 3:** evolução para 3D.
-
-## Desenvolvimento
-
-Grok como agente de programação, com GitHub para versionamento e ambiente de desenvolvimento no navegador.
-
-## Stack
+## Stack Oficial
 
 | Tecnologia | Responsabilidade |
 |------------|------------------|
-| JavaScript (ES2025+) | Programação do motor gráfico |
-| HTML5 | Estrutura e execução dos jogos |
-| CSS3 | Interface e ferramentas visuais |
-| WebGL 2.0 | Renderização gráfica acelerada por GPU |
-| GLSL ES 3.00 | Shaders e efeitos gráficos |
-| JSON | Configurações, cenas e dados dos jogos |
+| JavaScript (ES2025+) | Implementação do motor e editor |
+| HTML5 | Estrutura e execução |
+| CSS3 | Interface e componentes visuais |
+| WebGL 2.0 | Renderização acelerada por GPU |
+| GLSL ES 3.00 | Shaders |
+| JSON | Configurações, metadados e dados de cenas |
+| Node.js | Ferramentas de desenvolvimento e build |
 
-## Estrutura do Repositório
+## Estrutura do Projeto
 
-A fundação arquitetural foi criada. Consulte a documentação em `documentation/` para detalhes completos.
+```
+ENGINE-GP/
+├── documentation/     # Documentação técnica
+├── engine/            # Sistemas do motor
+├── editor/            # Editor visual GP
+├── runtime/           # Runtime independente
+├── export/            # Empacotamento e exportação
+├── projects/          # Projetos e templates
+├── tests/             # Testes
+├── public/            # Assets públicos
+└── index.html         # Entry point de demonstração
+```
 
-Principais pastas:
+## Status
 
-- `documentation/` — Documentação técnica arquitetural.
-- `engine/` — Sistemas do motor (core, graphics, physics, etc.).
-- `editor/` — Editor visual GP.
-- `runtime/` — Runtime independente.
-- `src/` — Entry point de demonstração existente (legado).
+**Fase 0 — Estrutura Zero: Concluída.**
 
-## Status Atual
+A fundação organizacional e documental está estabelecida. Os sistemas funcionais serão implementados na Fase 1.
 
-- Fundação estrutural e documentacional criada.
-- Sistemas funcionais ainda não implementados (apenas skeletons fundamentais onde necessário).
-- Próxima etapa recomendada: implementar o Game Loop robusto e o Renderer 2D com batching.
+## Desenvolvimento
 
-## Como Testar a Demonstração Atual
+```bash
+npm install
+npm run dev
+npm test
+```
 
-Abra `index.html` em um navegador moderno (com suporte a WebGL 2.0).
+## Documentação
+
+Consulte a pasta `documentation/` para detalhes de arquitetura, sistemas e roadmap.

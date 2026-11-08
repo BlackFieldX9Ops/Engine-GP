@@ -5,10 +5,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "echo 'Use a local server or open index.html'",
-    "test": "echo 'Testes ainda não configurados'"
+    "dev": "echo 'Fase 0: Use um servidor local ou abra index.html'",
+    "test": "echo 'Testes ainda não configurados com runner. Estrutura pronta em tests/'",
+    "lint": "echo 'Lint ainda não configurado'",
+    "build": "echo 'Build ainda não configurado'"
   },
-  "keywords": ["game-engine", "webgl2", "2d", "html5"],
+  "keywords": ["game-engine", "webgl2", "2d", "html5", "engine-gp"],
   "author": "BlackFieldX9Ops",
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

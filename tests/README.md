@@ -1,7 +1,16 @@
 # Testes
 
-Estrutura preparada para testes unitários, de integração, funcionais, de renderização e desempenho.
+Estrutura preparada para testes unitários, de integração e funcionais.
+
+## Organização
+
+- `core/` — Testes do engine/core
+- `renderer/` — Testes do renderer
+- `physics/` — Testes de física
+- `scene/` — Testes do sistema de cenas
 
 ## Status
 
-Nenhum teste configurado ou executado nesta etapa. Configuração de ferramentas de teste será adicionada conforme necessário.
+Nenhum teste implementado ou executado nesta fase (Fase 0).
+
+Runner de testes e configuração serão adicionados na Fase 1 conforme necessário.
