@@ -1,8 +1,11 @@
 /**
  * EngineLoop
- * Game Loop controlado, com pausa, delta time e prevenção de loops duplicados.
+ * Game Loop controlado, com pausa, resume, delta time e prevenção de loops duplicados.
+ * Seguro para ambientes sem requestAnimationFrame (testes Node).
  */
 import { Logger } from '../utils/Logger.js';
+
+const hasRAF = typeof requestAnimationFrame === 'function';
 
 export class EngineLoop {
   constructor(engine) {
@@ -20,16 +23,18 @@ export class EngineLoop {
     }
     this.running = true;
     this.paused = false;
-    this.engine.time.reset(performance.now());
+    this.engine.time.reset(typeof performance !== 'undefined' ? performance.now() : Date.now());
     Logger.log('Loop started', 'EngineLoop');
-    this._rafId = requestAnimationFrame(this._boundLoop);
+    if (hasRAF) {
+      this._rafId = requestAnimationFrame(this._boundLoop);
+    }
   }
 
   stop() {
     if (!this.running) return;
     this.running = false;
     this.paused = false;
-    if (this._rafId !== null) {
+    if (this._rafId !== null && hasRAF) {
       cancelAnimationFrame(this._rafId);
       this._rafId = null;
     }
@@ -45,7 +50,7 @@ export class EngineLoop {
   resume() {
     if (!this.running || !this.paused) return;
     this.paused = false;
-    this.engine.time.lastTime = performance.now();
+    this.engine.time.lastTime = typeof performance !== 'undefined' ? performance.now() : Date.now();
     Logger.log('Loop resumed', 'EngineLoop');
   }
 
@@ -63,6 +68,8 @@ export class EngineLoop {
       this.engine.render();
     }
 
-    this._rafId = requestAnimationFrame(this._boundLoop);
+    if (hasRAF) {
+      this._rafId = requestAnimationFrame(this._boundLoop);
+    }
   }
 }
