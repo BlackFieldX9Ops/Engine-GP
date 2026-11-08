@@ -1,0 +1,14 @@
+{
+  "name": "engine-gp",
+  "version": "0.1.0",
+  "description": "ENGINE-GP — Motor gráfico próprio, independente e original. Fase 1: HTML5 2D com WebGL 2.0.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Use a local server or open index.html'",
+    "test": "echo 'Testes ainda não configurados'"
+  },
+  "keywords": ["game-engine", "webgl2", "2d", "html5"],
+  "author": "BlackFieldX9Ops",
+  "license": "UNLICENSED"
+}
