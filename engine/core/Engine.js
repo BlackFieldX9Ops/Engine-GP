@@ -1,69 +1,102 @@
 /**
- * ENGINE-GP Core Engine
- *
- * Responsabilidade: inicialização do motor, ciclo de vida, coordenação de módulos.
- *
- * Status: Skeleton fundamental. Evolui a partir do Engine.js existente em src/core/.
- * Não contém implementação completa de sistemas nesta etapa.
+ * Engine
+ * Classe principal do motor. Controla ciclo de vida, sistemas centrais e integração.
  */
-export class Engine {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.gl = null;
-    this.running = false;
-    this.lastTime = 0;
+import { EngineConfig } from './EngineConfig.js';
+import { Time } from './Time.js';
+import { EventSystem } from './EventSystem.js';
+import { EngineLoop } from './EngineLoop.js';
+import { Logger } from '../utils/Logger.js';
 
-    this.initialize();
+export class Engine {
+  constructor(canvas = null, configOverrides = {}) {
+    this.canvas = canvas;
+    this.config = new EngineConfig(configOverrides);
+    this.time = new Time(this.config);
+    this.events = new EventSystem();
+    this.loop = new EngineLoop(this);
+    this.gl = null;
+    this._initialized = false;
+    this._destroyed = false;
+
+    Logger.log('Engine created', 'Engine');
   }
 
   initialize() {
-    if (this.canvas) {
-      this.gl = this.canvas.getContext('webgl2', {
-        antialias: false,
-        alpha: false,
-        depth: false,
-        stencil: false,
-        preserveDrawingBuffer: false
-      });
-
-      if (!this.gl) {
-        throw new Error('WebGL 2.0 não suportado');
-      }
+    if (this._initialized) {
+      Logger.warn('Engine already initialized', 'Engine');
+      return;
     }
+    if (this._destroyed) throw new Error('Cannot initialize a destroyed Engine');
 
-    // TODO: Inicializar módulos (ResourceManager, EventSystem, etc.)
+    try {
+      if (this.canvas) {
+        this.gl = this.canvas.getContext('webgl2', {
+          antialias: this.config.antialias,
+          alpha: this.config.alpha,
+          depth: this.config.depth,
+          stencil: this.config.stencil,
+          preserveDrawingBuffer: this.config.preserveDrawingBuffer
+        });
+        if (!this.gl) throw new Error('WebGL 2.0 not supported');
+        this.gl.clearColor(...this.config.clearColor);
+      }
+
+      this.events.emit('engine:initialized', { engine: this });
+      this._initialized = true;
+      Logger.log('Engine initialized', 'Engine');
+    } catch (err) {
+      Logger.error(`Initialization failed: ${err.message}`, 'Engine');
+      throw err;
+    }
   }
 
   start() {
-    this.running = true;
-    this.lastTime = performance.now();
-    requestAnimationFrame((t) => this.loop(t));
-  }
-
-  loop(time) {
-    if (!this.running) return;
-
-    const dt = (time - this.lastTime) / 1000;
-    this.lastTime = time;
-
-    this.update(dt);
-    this.render();
-
-    requestAnimationFrame((t) => this.loop(t));
-  }
-
-  update(dt) {
-    // TODO: Atualizar sistemas (scene, physics, animation, input, etc.)
-  }
-
-  render() {
-    if (!this.gl) return;
-    this.gl.clearColor(0.035, 0.031, 0.059, 1);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-    // TODO: Delegar ao Graphics Renderer
+    if (!this._initialized) this.initialize();
+    if (this._destroyed) throw new Error('Cannot start a destroyed Engine');
+    this.loop.start();
+    this.events.emit('engine:started', { engine: this });
   }
 
   stop() {
-    this.running = false;
+    this.loop.stop();
+    this.events.emit('engine:stopped', { engine: this });
+  }
+
+  pause() {
+    this.loop.pause();
+    this.events.emit('engine:paused', { engine: this });
+  }
+
+  resume() {
+    this.loop.resume();
+    this.events.emit('engine:resumed', { engine: this });
+  }
+
+  update(dt) {
+    this.events.emit('engine:update', { dt, engine: this });
+  }
+
+  fixedUpdate(dt) {
+    this.events.emit('engine:fixedUpdate', { dt, engine: this });
+  }
+
+  render() {
+    if (this.gl) {
+      this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+    }
+    this.events.emit('engine:render', { engine: this });
+  }
+
+  destroy() {
+    if (this._destroyed) return;
+    this.stop();
+    this.events.clear();
+    this.gl = null;
+    this.canvas = null;
+    this._destroyed = true;
+    this._initialized = false;
+    Logger.log('Engine destroyed', 'Engine');
+    this.events.emit('engine:destroyed', { engine: this });
   }
 }
