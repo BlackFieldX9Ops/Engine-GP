@@ -7,6 +7,7 @@ import { Time } from './Time.js';
 import { EventSystem } from './EventSystem.js';
 import { EngineLoop } from './EngineLoop.js';
 import { Logger } from '../utils/Logger.js';
+import { Renderer } from '../renderer/Renderer.js';
 
 export class Engine {
   constructor(canvas = null, configOverrides = {}) {
@@ -16,6 +17,7 @@ export class Engine {
     this.events = new EventSystem();
     this.loop = new EngineLoop(this);
     this.gl = null;
+    this.renderer = null;
     this._initialized = false;
     this._destroyed = false;
 
@@ -40,6 +42,9 @@ export class Engine {
         });
         if (!this.gl) throw new Error('WebGL 2.0 not supported');
         this.gl.clearColor(...this.config.clearColor);
+        this.renderer = new Renderer(this.gl);
+        this._resize();
+        window.addEventListener('resize', () => this._resize());
       }
 
       this.events.emit('engine:initialized', { engine: this });
@@ -49,6 +54,15 @@ export class Engine {
       Logger.error(`Initialization failed: ${err.message}`, 'Engine');
       throw err;
     }
+  }
+
+  _resize() {
+    if (!this.canvas || !this.gl || !this.renderer) return;
+    const dpr = window.devicePixelRatio || 1;
+    this.canvas.width = window.innerWidth * dpr;
+    this.canvas.height = window.innerHeight * dpr;
+    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+    this.renderer.setProjection(this.canvas.width, this.canvas.height);
   }
 
   start() {
@@ -94,6 +108,7 @@ export class Engine {
     this.events.clear();
     this.gl = null;
     this.canvas = null;
+    this.renderer = null;
     this._destroyed = true;
     this._initialized = false;
     Logger.log('Engine destroyed', 'Engine');
