@@ -1,16 +1,17 @@
 # Testes
 
-Estrutura preparada para testes unitários, de integração e funcionais.
+Testes automatizados do CORE (Fase 1).
 
-## Organização
+## Como executar (Node)
 
-- `core/` — Testes do engine/core
-- `renderer/` — Testes do renderer
-- `physics/` — Testes de física
-- `scene/` — Testes do sistema de cenas
+```bash
+node --experimental-vm-modules tests/core/Time.test.js
+node --experimental-vm-modules tests/core/EventSystem.test.js
+node --experimental-vm-modules tests/core/EngineConfig.test.js
+node --experimental-vm-modules tests/core/Engine.test.js
+```
 
 ## Status
 
-Nenhum teste implementado ou executado nesta fase (Fase 0).
-
-Runner de testes e configuração serão adicionados na Fase 1 conforme necessário.
+Testes do CORE implementados e verificáveis em Node.
+Testes que dependem de WebGL/canvas exigem ambiente de navegador (pendente para fases futuras).
