@@ -1,9 +1,13 @@
 # Game Runtime
 
-Execução de jogos independentemente do Editor.
+Execução independente de jogos.
 
-Responsável por carregar projetos, cenas e coordenar os sistemas do motor durante a execução.
+## Arquivos Planejados
+
+- `Runtime.js` — Ponto de entrada do runtime.
+- Carregadores de projeto e cena.
+- Coordenação com os sistemas do motor.
 
 ## Status
 
-Estrutura planejada. Implementação futura.
+Estrutura criada. Implementação futura.
